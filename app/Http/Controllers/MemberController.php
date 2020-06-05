@@ -2,70 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Library\Constants;
+use App\Library\BaseResponseModel;
+use App\Http\Requests\LoginRequest;
 
 class MemberController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-
-        $data = $request->all();
-
+        $credentials = $request->only('email', 'password');
         $errors = [];
-
         $data = [];
 
         $message = "";
 
         $status = true;
 
-        $validator = Validator::make($data, [
-
-            'email' => 'required',
-
-            'password' => 'required',
-
-        ]);
-
-        if ($validator->fails()) {
-
-            $status = false;
-
-            $errors = $validator->errors();
-
-            $message = "Login Failed";
-
-        }
-
-        $credentials = $request->only("email", "password");
-
         if (!$token = auth('api')->attempt($credentials)) {
-
             $status = false;
-
+            $message = Constants::LoginFailed;
             $errors = [
-
-                "login" => "Invalid username or password",
-
+                "login" => Constants::InvalidCredentials,
             ];
-
-            $message = "Login Failed";
-
         } else {
-
-            $message = "Login Successful";
-
+            $message = Constants::LoginSucceed;
             $data = [
-
                 'access_token' => $token,
-
                 'token_type' => 'bearer',
-
                 'expires_in' => auth('api')->factory()->getTTL() * 60,
-
             ];
         }
 
-        return $this->sendResult($message, $data, $errors, $status);
+        return BaseResponseModel::response($message, $data, $errors, $status);
     }
 }
