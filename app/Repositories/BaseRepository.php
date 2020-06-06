@@ -4,24 +4,22 @@ namespace App\Repositories;
 
 use \Illuminate\Database\Eloquent\Model;
 use \Illuminate\Container\Container as Application;
+use App\Library\BaseResponseModel;
+use App\Library\Constants;
+
+
 abstract class BaseRepository
 {
     // model property on class instances
     protected $model;
 
-    // // Constructor to bind model to repo
-    // public function __construct(Model $model)
-    // {
-    //     $this->model = $model;
-    // }
-
-    public function __construct(Application $app)
+    protected function __construct(Application $app)
     {
         $this->app = $app;
         $this->makeModel();
     }
 
-    abstract public function model();
+    abstract protected function model();
 
     private function makeModel()
     {
@@ -35,55 +33,80 @@ abstract class BaseRepository
 
 
     // Get all instances of model
-    public function all()
+    protected function all()
     {
         return $this->model->all();
     }
 
     // create a new record in the database
-    public function create($request)
+    protected function create($request)
     {
         $data = $request->only($this->model->getFillable());
-        return $this->model->create($data);
+        $result =  $this->model->create($data);
+
+        return $this->getResponse($result);
     }
 
     // update record in the database
-    public function update($request, $id)
+    protected function update($request, $id)
     {
         // dd($this->model->getFillable());
         $data = $request->only($this->model->getFillable());
         $record = $this->model->find($id);
-        return $record->update($data);
+        $result = $record->update($data);
+
+        return $this->getResponse($result);
     }
 
     // remove record from the database
-    public function delete($id)
+    protected function delete($id)
     {
         return $this->model->destroy($id);
     }
 
     // show the record with the given id
-    public function show($id)
+    protected function show($id)
     {
-        return $this->model->find($id);
+        $result =  $this->model->find($id);
+
+        return $this->getResponse($result);
     }
 
     // Get the associated model
-    public function getModel()
+    protected function getModel()
     {
         return $this->model;
     }
 
     // Set the associated model
-    public function setModel($model)
+    protected function setModel($model)
     {
         $this->model = $model;
         return $this;
     }
 
-    // Eager load database relationships
-    public function with($relations)
+    protected function find(array $where = [], $with = null)
     {
-        return $this->model->with($relations);
+        if ($with) {
+            $result = $this->model->with($with)->where($where)->get();
+        } else {
+            $result = $this->model->where($where)->get();
+        }
+
+        return $this->getResponse($result);
+    }
+
+    protected function getResponse($result, $message = '')
+    {
+        $errors = [];
+        $status = true;
+        if ($result) {
+            $data = $result;
+        } else {
+            $status = false;
+            $errors = ['invalid_entity' => Constants::Error];
+        }
+
+        return BaseResponseModel::response($message, $data, $errors, $status);
     }
 }

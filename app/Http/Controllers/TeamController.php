@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\TeamRequest;
 use App\Repositories\TeamRepository;
-use App\Library\BaseResponseModel;
-use App\Library\Constants;
 
 class TeamController extends Controller
 {
@@ -27,7 +25,7 @@ class TeamController extends Controller
      */
     public function index()
     {
-        //
+        return $this->repository->getList();
     }
 
 
@@ -41,9 +39,7 @@ class TeamController extends Controller
     public function update(TeamRequest $request, int $team)
     {
 
-        $this->repository->update($request, $team);
-
-        return BaseResponseModel::success(Constants::TeamUpdated);
+       return $this->repository->update($request, $team);
     }
 
     /**
@@ -54,9 +50,7 @@ class TeamController extends Controller
      */
     public function store(TeamRequest $request)
     {
-        $this->repository->create($request);
-
-        return BaseResponseModel::success(Constants::TeamCreated);
+        return $this->repository->create($request);
     }
 
     /**
@@ -67,11 +61,6 @@ class TeamController extends Controller
      */
     public function show(int $team)
     {
-        $teamDetail = $this->repository->show($team);
-        if ($teamDetail) {
-            return BaseResponseModel::response(Constants::SuccessfullyFetched, $teamDetail);
-        }
-
-        return BaseResponseModel::response(Constants::ItemNotFound, null, ['id' => Constants::InvalidId]);
+        return $this->repository->show($team);
     }
 }

@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\PlayerRequest;
 use App\Repositories\PlayerRepository;
-use App\Library\BaseResponseModel;
-use App\Library\Constants;
 
 class PlayerController extends Controller
 {
@@ -27,7 +25,7 @@ class PlayerController extends Controller
      */
     public function index()
     {
-        //
+        return $this->repository->getList();
     }
 
 
@@ -41,9 +39,8 @@ class PlayerController extends Controller
     public function update(PlayerRequest $request, int $player)
     {
 
-        $this->repository->update($request, $player);
+       return $this->repository->update($request, $player);
 
-        return BaseResponseModel::success(Constants::PlayerUpdated);
     }
 
     /**
@@ -54,9 +51,7 @@ class PlayerController extends Controller
      */
     public function store(PlayerRequest $request)
     {
-        $this->repository->create($request);
-
-        return BaseResponseModel::success(Constants::PlayerCreated);
+        return $this->repository->create($request);
     }
 
     /**
@@ -67,11 +62,6 @@ class PlayerController extends Controller
      */
     public function show(int $player)
     {
-        $playerDetail = $this->repository->show($player);
-        if ($playerDetail) {
-            return BaseResponseModel::response(Constants::SuccessfullyFetched, $playerDetail);
-        }
-
-        return BaseResponseModel::response(Constants::ItemNotFound, null, ['id' => Constants::InvalidId]);
+        return $this->repository->show($player);
     }
 }

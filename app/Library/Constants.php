@@ -8,6 +8,7 @@ class Constants {
     const LoginSucceed = 'Login Successful';
     const InvalidCredentials = 'Invalid username or password';
     const InvalidRequest = 'The given details are invalid';
+    const Errors = 'Unable to get entity by Id';
 
     # team
     const TeamCreated = 'Team is created successfully';

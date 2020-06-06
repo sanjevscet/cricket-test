@@ -24,10 +24,16 @@ class PlayerRepository extends BaseRepository
         return Player::class;
     }
 
+    // get list will the records
+    public function getList()
+    {
+        return parent::find();
+    }
+
     // show the record with the given id
     public function show($id)
     {
-        return parent::show($id);
+        return parent::find(['id' => $id], 'team');
     }
 
     // create a new record in the database
