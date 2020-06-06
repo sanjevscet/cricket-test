@@ -104,9 +104,22 @@ abstract class BaseRepository
             $data = $result;
         } else {
             $status = false;
-            $errors = ['invalid_entity' => Constants::Error];
+            $errors = ['invalid_entity' => Constants::Errors];
         }
 
         return BaseResponseModel::response($message, $data, $errors, $status);
     }
+
+    // updateOrCreate record in the database
+    protected function updateOrCreate($request, $condition = [])
+    {
+        $data = $request->only($this->model->getFillable());
+        $result = $this->model->updateOrCreate(
+            $condition,
+            $data
+        );;
+
+        return $this->getResponse($result);
+    }
+
 }

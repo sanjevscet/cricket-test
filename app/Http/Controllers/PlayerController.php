@@ -4,17 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\PlayerRequest;
+use App\Http\Requests\PlayerHistoryRequest;
 use App\Repositories\PlayerRepository;
+use App\Repositories\PlayerHistoryRepository;
 
 class PlayerController extends Controller
 {
 
 
     protected $repository;
+    protected $historyRepository;
 
-    public function __construct(PlayerRepository $repository)
+
+    public function __construct(PlayerRepository $repository, PlayerHistoryRepository $historyRepository)
     {
         $this->repository = $repository;
+        $this->historyRepository = $historyRepository;
     }
 
 
@@ -63,5 +68,9 @@ class PlayerController extends Controller
     public function show(int $player)
     {
         return $this->repository->show($player);
+    }
+
+    public function storeOrUpdateHistory(PlayerHistoryRequest $request) {
+       return $this->historyRepository->createOrUpdate($request);
     }
 }
