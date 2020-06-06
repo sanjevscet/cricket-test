@@ -20,6 +20,7 @@ Route::group([ 'middleware' => ['api']], static function ($router) {
 
 Route::group([ 'middleware' => ['jwt.verify']], static function ($router) {
     Route::resource('teams', 'TeamController');
+    Route::resource('players', 'PlayerController');
 });
 
 

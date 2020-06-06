@@ -2,11 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Player;
 use Illuminate\Http\Request;
+use App\Http\Requests\PlayerRequest;
+use App\Repositories\PlayerRepository;
+use App\Library\BaseResponseModel;
+use App\Library\Constants;
 
 class PlayerController extends Controller
 {
+
+
+    protected $repository;
+
+    public function __construct(PlayerRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -17,14 +30,20 @@ class PlayerController extends Controller
         //
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * Update the specified resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int $player
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function update(PlayerRequest $request, int $player)
     {
-        //
+
+        $this->repository->update($request, $player);
+
+        return BaseResponseModel::success(Constants::PlayerUpdated);
     }
 
     /**
@@ -33,53 +52,26 @@ class PlayerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PlayerRequest $request)
     {
-        //
+        $this->repository->create($request);
+
+        return BaseResponseModel::success(Constants::PlayerCreated);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\player  $player
+     * @param int  $player
      * @return \Illuminate\Http\Response
      */
-    public function show(Player $player)
+    public function show(int $player)
     {
-        //
-    }
+        $playerDetail = $this->repository->show($player);
+        if ($playerDetail) {
+            return BaseResponseModel::response(Constants::SuccessfullyFetched, $playerDetail);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\player  $player
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Player $player)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\player  $player
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Player $player)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\player  $player
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Player $player)
-    {
-        //
+        return BaseResponseModel::response(Constants::ItemNotFound, null, ['id' => Constants::InvalidId]);
     }
 }

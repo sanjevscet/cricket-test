@@ -2,10 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Player;
+
 use Illuminate\Container\Container as Application;
 
-
-class TeamRepository extends BaseRepository
+class PlayerRepository extends BaseRepository
 {
 
     public function __construct(Application $app)
@@ -20,7 +21,7 @@ class TeamRepository extends BaseRepository
      */
     public function model()
     {
-        return \App\Team::class;
+        return Player::class;
     }
 
     // show the record with the given id
