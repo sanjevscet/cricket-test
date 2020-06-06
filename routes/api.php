@@ -18,10 +18,12 @@ Route::group([ 'middleware' => ['api'], 'prefix' => 'member'], static function (
     Route::post('login', 'MemberController@login');
     Route::post('register', 'MemberController@register');
 
-    Route::group(['middleware' => 'jwt.verify'], static function( $router) {
+    Route::group(['middleware' => ['api']], static function( $router) {
         Route::post('logout', 'MemberController@logout');
-        Route::post('refresh', 'MemberController@refresh');
-        Route::get('detail', 'MemberController@detail');
+        Route::resource('teams', 'TeamController');
+        // Route::post('team/create', 'MemberController@logout');
+        // Route::post('refresh', 'MemberController@refresh');
+        // Route::get('detail', 'MemberController@detail');
     });
 });
 

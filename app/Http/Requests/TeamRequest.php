@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
-class LoginRequest extends FormRequest
+class TeamRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,9 +27,11 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->team;
         return [
-            'email' => 'required|email',
-            'password' => 'required',
+            'name' => 'required|min:3|max:64|unique:teams,name,'.$id,
+            'logo_uri' => 'required|url|max:255|unique:teams,logo_uri,'.$id,
+            'club' => 'required|min:3|max:64',
         ];
     }
 
