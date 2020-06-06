@@ -7,21 +7,6 @@ namespace App\Repositories;
 
 class TeamRepository extends BaseRepository
 {
-    // model property on class instances
-    // protected $model;
-
-    // Constructor to bind model to repo
-    // public function __construct(Model $model)
-    // {
-    //     parent::__construct($app);
-    // }
-
-    // // Get all instances of model
-    // public function all()
-    // {
-    //     return $this->model->all();
-    // }
-
 
     public function __construct(\Illuminate\Container\Container $app)
     {
@@ -38,19 +23,23 @@ class TeamRepository extends BaseRepository
         return \App\Team::class;
     }
 
+    // show the record with the given id
+    public function show($id)
+    {
+        return parent::show($id);
+    }
+
     // create a new record in the database
     public function create($request)
     {
-        // dd($request->input());
         return parent::create($request);
     }
 
-//    // update record in the database
-    //    public function update(array $data, $id)
-    //    {
-    //        $record = $this->find($id);
-    //        return $record->update($data);
-    //    }
+   // update record in the database
+    public function update($request, $id)
+    {
+        return parent::update($request, $id);
+    }
 
 //    // remove record from the database
     //    public function delete($id)
@@ -58,11 +47,6 @@ class TeamRepository extends BaseRepository
     //        return $this->model->destroy($id);
     //    }
 
-//    // show the record with the given id
-    //    public function show($id)
-    //    {
-    //        return $this->model-findOrFail($id);
-    //    }
 
 //    // Get the associated model
     //    public function getModel()

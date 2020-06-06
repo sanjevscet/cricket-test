@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use \Illuminate\Database\Eloquent\Model;
-
+use \Illuminate\Container\Container as Application;
 abstract class BaseRepository
 {
     // model property on class instances
@@ -15,7 +15,7 @@ abstract class BaseRepository
     //     $this->model = $model;
     // }
 
-    public function __construct(\Illuminate\Container\Container $app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
         $this->makeModel();
@@ -43,13 +43,16 @@ abstract class BaseRepository
     // create a new record in the database
     public function create($request)
     {
-        return $this->model->create($request->all());
+        $data = $request->only($this->model->getFillable());
+        return $this->model->create($data);
     }
 
     // update record in the database
-    public function update(array $data, $id)
+    public function update($request, $id)
     {
-        $record = $this->find($id);
+        // dd($this->model->getFillable());
+        $data = $request->only($this->model->getFillable());
+        $record = $this->model->find($id);
         return $record->update($data);
     }
 
@@ -62,7 +65,7 @@ abstract class BaseRepository
     // show the record with the given id
     public function show($id)
     {
-        return $this->model-findOrFail($id);
+        return $this->model->find($id);
     }
 
     // Get the associated model

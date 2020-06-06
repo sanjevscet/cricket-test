@@ -22,4 +22,8 @@ class BaseResponseModel {
 
         return response()->json($result, $errorCode);
     }
+
+    public static function success(string $message) {
+        return BaseResponseModel::response($message, null);
+    }
 }

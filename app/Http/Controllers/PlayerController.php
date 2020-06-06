@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\player;
+use App\Player;
 use Illuminate\Http\Request;
 
 class PlayerController extends Controller
@@ -44,7 +44,7 @@ class PlayerController extends Controller
      * @param  \App\player  $player
      * @return \Illuminate\Http\Response
      */
-    public function show(player $player)
+    public function show(Player $player)
     {
         //
     }
@@ -55,7 +55,7 @@ class PlayerController extends Controller
      * @param  \App\player  $player
      * @return \Illuminate\Http\Response
      */
-    public function edit(player $player)
+    public function edit(Player $player)
     {
         //
     }
@@ -67,7 +67,7 @@ class PlayerController extends Controller
      * @param  \App\player  $player
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, player $player)
+    public function update(Request $request, Player $player)
     {
         //
     }
@@ -78,7 +78,7 @@ class PlayerController extends Controller
      * @param  \App\player  $player
      * @return \Illuminate\Http\Response
      */
-    public function destroy(player $player)
+    public function destroy(Player $player)
     {
         //
     }

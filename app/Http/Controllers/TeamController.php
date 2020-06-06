@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\team;
 use Illuminate\Http\Request;
 use App\Http\Requests\TeamRequest;
 use App\Repositories\TeamRepository;
+use App\Library\BaseResponseModel;
+use App\Library\Constants;
 
 class TeamController extends Controller
 {
@@ -15,7 +16,6 @@ class TeamController extends Controller
 
     public function __construct(TeamRepository $repository)
     {
-        // parent::__construct($request);
         $this->repository = $repository;
     }
 
@@ -30,14 +30,20 @@ class TeamController extends Controller
         //
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * Update the specified resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int $team
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function update(TeamRequest $request, int $team)
     {
-        //
+
+        $this->repository->update($request, $team);
+
+        return BaseResponseModel::success(Constants::TeamUpdated);
     }
 
     /**
@@ -48,56 +54,24 @@ class TeamController extends Controller
      */
     public function store(TeamRequest $request)
     {
-        //
-        $a = $this->repository->create($request);
-        var_dump($a);
-        // dd($a);
+        $this->repository->create($request);
+
+        return BaseResponseModel::success(Constants::TeamCreated);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\team  $team
+     * @param int  $team
      * @return \Illuminate\Http\Response
      */
-    public function show(team $team)
+    public function show(int $team)
     {
-        //
-    }
+        $teamDetail = $this->repository->show($team);
+        if ($teamDetail) {
+            return BaseResponseModel::response(Constants::SuccessfullyFetched, $teamDetail);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\team  $team
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(team $team)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\team  $team
-     * @return \Illuminate\Http\Response
-     */
-    public function update(TeamRequest $request, int $team)
-    {
-        //
-        dd($team);
-        dd($request);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\team  $team
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(team $team)
-    {
-        //
+        return BaseResponseModel::response(Constants::ItemNotFound, null, ['id' => Constants::InvalidId]);
     }
 }
